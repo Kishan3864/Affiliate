@@ -1,0 +1,48 @@
+## .NET
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+
+## SQLite
+*.db
+*.db-shm
+*.db-wal
+
+## IDE
+.vs/
+.vscode/
+*.swp
+*.swo
+.idea/
+
+## OS
+.DS_Store
+Thumbs.db
+
+## ASP.NET
+project.lock.json
+ScaffoldingReadMe.txt
+StyleCopReport.xml
+
+## User secrets
+secrets.json
+
+## Publish
+publish/
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+nuget.exe
+
+## Logs
+logs/
+*.log
