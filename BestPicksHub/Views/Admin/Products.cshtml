@@ -1,0 +1,57 @@
+@model List<AffiliateProduct>
+@{
+    ViewData["Title"] = "Manage Products";
+    Layout = "_Layout";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="admin-layout">
+            <nav class="admin-sidebar">
+                <h3 class="admin-sidebar-title">Admin Panel</h3>
+                <ul class="admin-nav">
+                    <li><a href="/admin" class="admin-nav-link">Dashboard</a></li>
+                    <li><a href="/admin/articles" class="admin-nav-link">Articles</a></li>
+                    <li><a href="/admin/products" class="admin-nav-link active">Products</a></li>
+                    <li><a href="/" class="admin-nav-link">View Site</a></li>
+                </ul>
+            </nav>
+            <div class="admin-content">
+                <h1>Products</h1>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Platform</th>
+                            <th>Price</th>
+                            <th>Rating</th>
+                            <th>Article</th>
+                            <th>Top Pick</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="product-row">
+                                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                        {
+                                            <img src="@product.ImageUrl" alt="@product.Name" class="product-thumb" />
+                                        }
+                                        @product.Name
+                                    </div>
+                                </td>
+                                <td><span class="product-card-platform platform-@product.Platform.ToString().ToLower()">@product.Platform</span></td>
+                                <td>@(product.Price > 1000 ? "₹" : "$")@product.Price.ToString("N2")</td>
+                                <td>@product.Rating.ToString("0.0")</td>
+                                <td><a href="/@product.Article?.Slug">@product.Article?.Title</a></td>
+                                <td>@(product.IsTopPick ? "Yes" : "No")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

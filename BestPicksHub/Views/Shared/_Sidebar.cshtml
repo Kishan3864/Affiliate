@@ -1,0 +1,65 @@
+@{
+    var popularArticles = ViewData["PopularArticles"] as List<Article>;
+    var allCategories = ViewData["AllCategories"] as List<Category>;
+}
+
+<aside class="sidebar">
+    <div class="ad-container ad-sidebar">
+        <span class="ad-label">Advertisement</span>
+        <div class="ad-placeholder" data-ad-slot="sidebar-1">
+            <p>Ad Space (300x250)</p>
+        </div>
+    </div>
+
+    @if (popularArticles != null && popularArticles.Any())
+    {
+        <div class="sidebar-widget">
+            <h3 class="sidebar-title">Popular Articles</h3>
+            <ul class="sidebar-articles">
+                @foreach (var article in popularArticles.Take(5))
+                {
+                    <li>
+                        <a href="/@article.Slug" class="sidebar-article-link">
+                            <span class="sidebar-article-title">@article.Title</span>
+                            <span class="sidebar-article-meta">@article.ViewCount views</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (allCategories != null && allCategories.Any())
+    {
+        <div class="sidebar-widget">
+            <h3 class="sidebar-title">Categories</h3>
+            <ul class="sidebar-categories">
+                @foreach (var cat in allCategories.Where(c => c.IsActive))
+                {
+                    <li>
+                        <a href="/category/@cat.Slug" class="sidebar-category-link">
+                            @cat.Name
+                            <span class="category-count">@cat.Articles.Count(a => a.IsPublished)</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="sidebar-widget">
+        <h3 class="sidebar-title">Newsletter</h3>
+        <p class="sidebar-text">Get the latest deals and reviews delivered to your inbox.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Your email address" class="newsletter-input" />
+            <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+    </div>
+
+    <div class="ad-container ad-sidebar">
+        <span class="ad-label">Advertisement</span>
+        <div class="ad-placeholder" data-ad-slot="sidebar-2">
+            <p>Ad Space (300x250)</p>
+        </div>
+    </div>
+</aside>

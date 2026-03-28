@@ -1,0 +1,82 @@
+@model ArticleListViewModel
+@{
+    ViewData["Title"] = string.IsNullOrEmpty(Model.ArticleType) ? "All Articles" : $"{Model.ArticleType} Articles";
+    ViewData["MetaDescription"] = "Browse our latest product reviews, buying guides, comparisons, and expert recommendations. Find the best products for every budget.";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">@ViewData["Title"]</h1>
+            <p class="page-subtitle">Expert reviews and guides to help you make smarter purchasing decisions.</p>
+        </div>
+
+        <div class="filter-bar">
+            <a href="/home/list" class="filter-btn @(string.IsNullOrEmpty(Model.ArticleType) ? "active" : "")">All</a>
+            <a href="/home/list?type=Review" class="filter-btn @(Model.ArticleType == "Review" ? "active" : "")">Reviews</a>
+            <a href="/home/list?type=Comparison" class="filter-btn @(Model.ArticleType == "Comparison" ? "active" : "")">Comparisons</a>
+            <a href="/home/list?type=BuyingGuide" class="filter-btn @(Model.ArticleType == "BuyingGuide" ? "active" : "")">Buying Guides</a>
+            <a href="/home/list?type=HowTo" class="filter-btn @(Model.ArticleType == "HowTo" ? "active" : "")">How-To</a>
+            <a href="/home/list?type=Deal" class="filter-btn @(Model.ArticleType == "Deal" ? "active" : "")">Deals</a>
+        </div>
+
+        @if (Model.Articles.Any())
+        {
+            <div class="article-grid">
+                @foreach (var article in Model.Articles)
+                {
+                    <a href="/@article.Slug" class="article-card">
+                        <div class="article-card-image">
+                            @if (!string.IsNullOrEmpty(article.FeaturedImageUrl))
+                            {
+                                <img src="@article.FeaturedImageUrl" alt="@(article.FeaturedImageAlt ?? article.Title)" loading="lazy" />
+                            }
+                            <span class="badge badge-@article.Type.ToString().ToLower()">@article.Type</span>
+                        </div>
+                        <div class="article-card-content">
+                            <div class="article-card-meta">
+                                <span class="meta-category">@article.Category?.Name</span>
+                                <span class="meta-date">@article.CreatedAt.ToString("MMM dd, yyyy")</span>
+                            </div>
+                            <h3 class="article-card-title-text">@article.Title</h3>
+                            <p class="article-card-excerpt">@article.Excerpt</p>
+                            <div class="article-card-footer">
+                                <span class="meta-readtime">@article.ReadTimeMinutes min read</span>
+                                @if (article.OverallRating > 0)
+                                {
+                                    <span class="meta-rating">&#9733; @article.OverallRating.ToString("0.0")</span>
+                                }
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <nav class="pagination">
+                    @if (Model.CurrentPage > 1)
+                    {
+                        <a href="/home/list?page=@(Model.CurrentPage - 1)@(Model.ArticleType != null ? $"&type={Model.ArticleType}" : "")" class="pagination-btn">&laquo; Previous</a>
+                    }
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <a href="/home/list?page=@i@(Model.ArticleType != null ? $"&type={Model.ArticleType}" : "")" class="pagination-btn @(i == Model.CurrentPage ? "active" : "")">@i</a>
+                    }
+                    @if (Model.CurrentPage < Model.TotalPages)
+                    {
+                        <a href="/home/list?page=@(Model.CurrentPage + 1)@(Model.ArticleType != null ? $"&type={Model.ArticleType}" : "")" class="pagination-btn">Next &raquo;</a>
+                    }
+                </nav>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <h2>No articles found</h2>
+                <p>Check back soon for new content!</p>
+                <a href="/" class="btn btn-primary">Back to Home</a>
+            </div>
+        }
+    </div>
+</section>

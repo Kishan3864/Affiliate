@@ -1,0 +1,82 @@
+@model CategoryViewModel
+@{
+    ViewData["Title"] = Model.Category.Name;
+    ViewData["MetaDescription"] = Model.Category.Description ?? $"Browse the best {Model.Category.Name} reviews, comparisons, and buying guides on BestPicksHub.";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="page-header">
+            <div class="category-header-icon">
+                @if (!string.IsNullOrEmpty(Model.Category.IconSvg))
+                {
+                    @Html.Raw(Model.Category.IconSvg)
+                }
+            </div>
+            <h1 class="page-title">@Model.Category.Name</h1>
+            @if (!string.IsNullOrEmpty(Model.Category.Description))
+            {
+                <p class="page-subtitle">@Model.Category.Description</p>
+            }
+        </div>
+
+        @if (Model.Articles.Any())
+        {
+            <div class="article-grid">
+                @foreach (var article in Model.Articles)
+                {
+                    <a href="/@article.Slug" class="article-card">
+                        <div class="article-card-image">
+                            @if (!string.IsNullOrEmpty(article.FeaturedImageUrl))
+                            {
+                                <img src="@article.FeaturedImageUrl" alt="@(article.FeaturedImageAlt ?? article.Title)" loading="lazy" />
+                            }
+                            <span class="badge badge-@article.Type.ToString().ToLower()">@article.Type</span>
+                        </div>
+                        <div class="article-card-content">
+                            <div class="article-card-meta">
+                                <span class="meta-category">@Model.Category.Name</span>
+                                <span class="meta-date">@article.CreatedAt.ToString("MMM dd, yyyy")</span>
+                            </div>
+                            <h3 class="article-card-title-text">@article.Title</h3>
+                            <p class="article-card-excerpt">@article.Excerpt</p>
+                            <div class="article-card-footer">
+                                <span class="meta-readtime">@article.ReadTimeMinutes min read</span>
+                                @if (article.OverallRating > 0)
+                                {
+                                    <span class="meta-rating">&#9733; @article.OverallRating.ToString("0.0")</span>
+                                }
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <nav class="pagination">
+                    @if (Model.CurrentPage > 1)
+                    {
+                        <a href="/category/@Model.Category.Slug?page=@(Model.CurrentPage - 1)" class="pagination-btn">&laquo; Previous</a>
+                    }
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <a href="/category/@Model.Category.Slug?page=@i" class="pagination-btn @(i == Model.CurrentPage ? "active" : "")">@i</a>
+                    }
+                    @if (Model.CurrentPage < Model.TotalPages)
+                    {
+                        <a href="/category/@Model.Category.Slug?page=@(Model.CurrentPage + 1)" class="pagination-btn">Next &raquo;</a>
+                    }
+                </nav>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <h2>No articles in this category yet</h2>
+                <p>Check back soon for new content!</p>
+                <a href="/" class="btn btn-primary">Back to Home</a>
+            </div>
+        }
+    </div>
+</section>

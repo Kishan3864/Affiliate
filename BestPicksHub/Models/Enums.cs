@@ -14,6 +14,8 @@ public enum Platform
     Amazon,
     Flipkart,
     ClickBank,
+    Digistore24,
+    WarriorPlus,
     ShareASale,
     CJ,
     Rakuten,

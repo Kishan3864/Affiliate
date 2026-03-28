@@ -1,0 +1,65 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    ViewData["Title"] = "Terms of Use";
+    ViewData["MetaDescription"] = "BestPicksHub Terms of Use - Read our terms and conditions for using our website.";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="legal-page">
+            <h1>Terms of Use</h1>
+            <p class="legal-date">Last Updated: @DateTime.UtcNow.ToString("MMMM dd, yyyy")</p>
+
+            <p>By accessing and using @Configuration["SiteSettings:SiteName"] (@Configuration["SiteSettings:SiteUrl"]), you agree to be bound by these Terms of Use. If you do not agree, please do not use our website.</p>
+
+            <h2>1. Acceptance of Terms</h2>
+            <p>These Terms of Use constitute a legally binding agreement between you and @Configuration["SiteSettings:SiteName"]. By accessing our website, you acknowledge that you have read, understood, and agree to be bound by these terms.</p>
+
+            <h2>2. Use of Website</h2>
+            <p>You agree to use our website only for lawful purposes. You shall not:</p>
+            <ul>
+                <li>Use the site in any way that violates applicable laws or regulations</li>
+                <li>Attempt to gain unauthorized access to any part of the website</li>
+                <li>Use automated tools to scrape or copy content without permission</li>
+                <li>Transmit any viruses, malware, or harmful code</li>
+                <li>Impersonate any person or entity</li>
+            </ul>
+
+            <h2>3. Intellectual Property</h2>
+            <p>All content on this website, including text, images, graphics, logos, and reviews, is the property of @Configuration["SiteSettings:SiteName"] and is protected by copyright laws. You may not reproduce, distribute, or create derivative works without our written consent.</p>
+
+            <h2>4. Product Reviews and Recommendations</h2>
+            <p>Our product reviews and recommendations are based on research and analysis. However:</p>
+            <ul>
+                <li>We do not guarantee the accuracy of product information, prices, or availability</li>
+                <li>Product prices and features may change without notice</li>
+                <li>Our ratings and opinions are subjective and may differ from your experience</li>
+                <li>We are not responsible for third-party products or services</li>
+            </ul>
+
+            <h2>5. Affiliate Links</h2>
+            <p>Our website contains affiliate links to third-party websites. When you click these links and make a purchase, we may earn a commission. We clearly disclose affiliate relationships in compliance with FTC guidelines. We are not responsible for the content, privacy practices, or terms of third-party websites.</p>
+
+            <h2>6. Disclaimer of Warranties</h2>
+            <p>This website is provided "as is" and "as available" without any warranties of any kind, either express or implied. We do not warrant that the website will be uninterrupted, error-free, or free of viruses.</p>
+
+            <h2>7. Limitation of Liability</h2>
+            <p>To the fullest extent permitted by law, @Configuration["SiteSettings:SiteName"] shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the website or reliance on any product recommendations.</p>
+
+            <h2>8. Third-Party Links</h2>
+            <p>Our website may contain links to third-party websites. We are not responsible for the content or practices of these external sites. Visiting third-party links is at your own risk.</p>
+
+            <h2>9. User-Submitted Content</h2>
+            <p>If you submit content (such as comments or feedback), you grant us a non-exclusive, royalty-free license to use, modify, and display that content on our website.</p>
+
+            <h2>10. Modifications</h2>
+            <p>We reserve the right to modify these Terms of Use at any time. Changes will be effective immediately upon posting. Your continued use of the website constitutes acceptance of the modified terms.</p>
+
+            <h2>11. Governing Law</h2>
+            <p>These Terms of Use are governed by the laws of India. Any disputes shall be resolved in the courts of India.</p>
+
+            <h2>12. Contact Us</h2>
+            <p>For questions about these Terms of Use, contact us at <a href="/home/contact">our contact page</a>.</p>
+        </div>
+    </div>
+</section>

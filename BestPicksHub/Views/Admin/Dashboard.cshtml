@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_Layout";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="admin-layout">
+            <nav class="admin-sidebar">
+                <h3 class="admin-sidebar-title">Admin Panel</h3>
+                <ul class="admin-nav">
+                    <li><a href="/admin" class="admin-nav-link active">Dashboard</a></li>
+                    <li><a href="/admin/articles" class="admin-nav-link">Articles</a></li>
+                    <li><a href="/admin/products" class="admin-nav-link">Products</a></li>
+                    <li><a href="/" class="admin-nav-link">View Site</a></li>
+                </ul>
+            </nav>
+            <div class="admin-content">
+                <h1>Dashboard</h1>
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">@ViewBag.TotalArticles</div>
+                        <div class="stat-label">Total Articles</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">@ViewBag.PublishedArticles</div>
+                        <div class="stat-label">Published</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">@ViewBag.TotalProducts</div>
+                        <div class="stat-label">Products</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">@ViewBag.TotalCategories</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                </div>
+                <div class="admin-quick-actions">
+                    <h2>Quick Actions</h2>
+                    <a href="/admin/editarticle" class="btn btn-primary">New Article</a>
+                    <a href="/admin/articles" class="btn btn-outline">Manage Articles</a>
+                    <a href="/admin/products" class="btn btn-outline">Manage Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

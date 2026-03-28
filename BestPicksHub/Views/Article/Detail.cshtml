@@ -1,0 +1,205 @@
+@model ArticleDetailViewModel
+@{
+    ViewData["Title"] = Model.Article.Title;
+    ViewData["MetaDescription"] = Model.Article.MetaDescription;
+    ViewData["Keywords"] = Model.Article.Keywords;
+    ViewData["OgType"] = "article";
+    ViewData["OgImage"] = Model.Article.FeaturedImageUrl;
+    ViewData["PopularArticles"] = Model.PopularArticles;
+    ViewData["AllCategories"] = Model.AllCategories;
+
+    var products = Model.Article.Products.OrderBy(p => p.SortOrder).ToList();
+    var faqs = Model.Article.Faqs.OrderBy(f => f.SortOrder).ToList();
+    var tags = Model.Article.ArticleTags.Select(at => at.Tag).ToList();
+}
+
+@section Head {
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Article",
+        "headline": "@Model.Article.Title",
+        "description": "@Model.Article.MetaDescription",
+        "author": { "@@type": "Person", "name": "@Model.Article.Author" },
+        "datePublished": "@Model.Article.CreatedAt.ToString("yyyy-MM-dd")",
+        "dateModified": "@Model.Article.UpdatedAt.ToString("yyyy-MM-dd")",
+        "image": "@Model.Article.FeaturedImageUrl",
+        "publisher": {
+            "@@type": "Organization",
+            "name": "BestPicksHub",
+            "logo": { "@@type": "ImageObject", "url": "/images/logo.svg" }
+        }
+    }
+    </script>
+    @if (faqs.Any())
+    {
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "FAQPage",
+            "mainEntity": [
+                @for (int i = 0; i < faqs.Count; i++)
+                {
+                    <text>
+                    {
+                        "@@type": "Question",
+                        "name": "@Html.Raw(faqs[i].Question.Replace("\"", "\\\""))",
+                        "acceptedAnswer": {
+                            "@@type": "Answer",
+                            "text": "@Html.Raw(faqs[i].Answer.Replace("\"", "\\\""))"
+                        }
+                    }@(i < faqs.Count - 1 ? "," : "")
+                    </text>
+                }
+            ]
+        }
+        </script>
+    }
+}
+
+<article class="article-page">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="/">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            @if (Model.Article.Category != null)
+            {
+                <a href="/category/@Model.Article.Category.Slug">@Model.Article.Category.Name</a>
+                <span class="breadcrumb-separator">/</span>
+            }
+            <span class="breadcrumb-current">@Model.Article.Title</span>
+        </nav>
+
+        <div class="content-with-sidebar">
+            <div class="article-main">
+                <header class="article-header">
+                    <span class="badge badge-@Model.Article.Type.ToString().ToLower()">@Model.Article.Type</span>
+                    <h1 class="article-title">@Model.Article.Title</h1>
+                    <div class="article-meta">
+                        <span class="meta-author">By @Model.Article.Author</span>
+                        <span class="meta-separator">|</span>
+                        <span class="meta-date">Updated @Model.Article.UpdatedAt.ToString("MMMM dd, yyyy")</span>
+                        <span class="meta-separator">|</span>
+                        <span class="meta-readtime">@Model.Article.ReadTimeMinutes min read</span>
+                        @if (Model.Article.OverallRating > 0)
+                        {
+                            <span class="meta-separator">|</span>
+                            <span class="meta-rating">&#9733; @Model.Article.OverallRating.ToString("0.0") (@Model.Article.RatingCount ratings)</span>
+                        }
+                    </div>
+                </header>
+
+                @if (!string.IsNullOrEmpty(Model.Article.FeaturedImageUrl))
+                {
+                    <img src="@Model.Article.FeaturedImageUrl" alt="@(Model.Article.FeaturedImageAlt ?? Model.Article.Title)" class="article-featured-image" />
+                }
+
+                <div class="ad-container ad-in-article">
+                    <span class="ad-label">Advertisement</span>
+                    <div class="ad-placeholder" data-ad-slot="article-top"></div>
+                </div>
+
+                @if (products.Any())
+                {
+                    <div class="quick-picks">
+                        <h2>Our Top Picks</h2>
+                        <div class="quick-picks-list">
+                            @foreach (var p in products.Where(p => p.IsTopPick || p.SortOrder <= 3).Take(3))
+                            {
+                                <div class="quick-pick-item">
+                                    <span class="quick-pick-badge">@(p.Badge ?? "Recommended")</span>
+                                    <strong>@p.Name</strong>
+                                    <span class="quick-pick-price">@(p.Price > 1000 ? "₹" : "$")@p.Price.ToString("N2")</span>
+                                    <a href="@p.AffiliateUrl" class="btn btn-sm btn-success" target="_blank" rel="nofollow sponsored">Check Price</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div class="article-content">
+                    @Html.Raw(Model.Article.ContentHtml)
+                </div>
+
+                <div class="ad-container ad-in-article">
+                    <span class="ad-label">Advertisement</span>
+                    <div class="ad-placeholder" data-ad-slot="article-mid"></div>
+                </div>
+
+                @if (products.Any())
+                {
+                    <section class="products-section">
+                        <h2 class="section-title">Detailed Product Reviews</h2>
+                        <div class="product-list">
+                            @foreach (var product in products)
+                            {
+                                await Html.RenderPartialAsync("_ProductCard", product);
+                            }
+                        </div>
+                    </section>
+                }
+
+                @if (faqs.Any())
+                {
+                    <section class="faq-section">
+                        <h2 class="section-title">Frequently Asked Questions</h2>
+                        @foreach (var faq in faqs)
+                        {
+                            <div class="faq-item">
+                                <button class="faq-question" onclick="toggleFaq(this)">
+                                    @faq.Question
+                                    <svg class="faq-arrow" viewBox="0 0 12 8" width="12" height="8"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                                </button>
+                                <div class="faq-answer">
+                                    <p>@faq.Answer</p>
+                                </div>
+                            </div>
+                        }
+                    </section>
+                }
+
+                @if (tags.Any())
+                {
+                    <div class="article-tags">
+                        <strong>Tags:</strong>
+                        @foreach (var tag in tags)
+                        {
+                            <a href="/search?q=@tag?.Slug" class="tag">@tag?.Name</a>
+                        }
+                    </div>
+                }
+
+                <div class="ad-container ad-in-article">
+                    <span class="ad-label">Advertisement</span>
+                    <div class="ad-placeholder" data-ad-slot="article-bottom"></div>
+                </div>
+
+                @if (Model.RelatedArticles.Any())
+                {
+                    <section class="related-articles">
+                        <h2 class="section-title">Related Articles</h2>
+                        <div class="article-grid article-grid-sm">
+                            @foreach (var related in Model.RelatedArticles)
+                            {
+                                <a href="/@related.Slug" class="article-card">
+                                    <div class="article-card-image">
+                                        @if (!string.IsNullOrEmpty(related.FeaturedImageUrl))
+                                        {
+                                            <img src="@related.FeaturedImageUrl" alt="@related.Title" loading="lazy" />
+                                        }
+                                    </div>
+                                    <div class="article-card-content">
+                                        <h3 class="article-card-title-text">@related.Title</h3>
+                                        <span class="meta-readtime">@related.ReadTimeMinutes min read</span>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    </section>
+                }
+            </div>
+
+            @await Html.PartialAsync("_Sidebar")
+        </div>
+    </div>
+</article>

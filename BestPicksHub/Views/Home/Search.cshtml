@@ -1,0 +1,60 @@
+@model SearchViewModel
+@{
+    ViewData["Title"] = string.IsNullOrEmpty(Model.Query) ? "Search" : $"Search: {Model.Query}";
+    ViewData["MetaDescription"] = $"Search results for '{Model.Query}' on BestPicksHub. Find product reviews, buying guides, and comparisons.";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Search</h1>
+            <form class="hero-search" action="/search" method="get">
+                <div class="search-box search-box-lg">
+                    <input type="text" name="q" value="@Model.Query" class="search-input" placeholder="Search for products, reviews, guides..." aria-label="Search" />
+                    <button type="submit" class="search-btn">
+                        <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Query))
+        {
+            <p class="search-summary">Found <strong>@Model.TotalResults</strong> result(s) for "<strong>@Model.Query</strong>"</p>
+        }
+
+        @if (Model.Results.Any())
+        {
+            <div class="article-grid">
+                @foreach (var article in Model.Results)
+                {
+                    <a href="/@article.Slug" class="article-card">
+                        <div class="article-card-image">
+                            @if (!string.IsNullOrEmpty(article.FeaturedImageUrl))
+                            {
+                                <img src="@article.FeaturedImageUrl" alt="@article.Title" loading="lazy" />
+                            }
+                            <span class="badge badge-@article.Type.ToString().ToLower()">@article.Type</span>
+                        </div>
+                        <div class="article-card-content">
+                            <div class="article-card-meta">
+                                <span class="meta-category">@article.Category?.Name</span>
+                                <span class="meta-date">@article.CreatedAt.ToString("MMM dd, yyyy")</span>
+                            </div>
+                            <h3 class="article-card-title-text">@article.Title</h3>
+                            <p class="article-card-excerpt">@article.Excerpt</p>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(Model.Query))
+        {
+            <div class="empty-state">
+                <h2>No results found</h2>
+                <p>Try different keywords or browse our categories.</p>
+                <a href="/" class="btn btn-primary">Back to Home</a>
+            </div>
+        }
+    </div>
+</section>

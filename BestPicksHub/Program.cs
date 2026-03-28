@@ -1,11 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using BestPicksHub.Data;
+using BestPicksHub.Filters;
 using BestPicksHub.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<NavCategoriesFilter>();
+});
+builder.Services.AddScoped<NavCategoriesFilter>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddResponseCaching();
@@ -73,6 +78,36 @@ app.MapControllerRoute(
     name: "search",
     pattern: "search",
     defaults: new { controller = "Home", action = "Search" });
+
+app.MapControllerRoute(
+    name: "about",
+    pattern: "home/about",
+    defaults: new { controller = "Home", action = "About" });
+
+app.MapControllerRoute(
+    name: "contact",
+    pattern: "home/contact",
+    defaults: new { controller = "Home", action = "Contact" });
+
+app.MapControllerRoute(
+    name: "privacy",
+    pattern: "home/privacy",
+    defaults: new { controller = "Home", action = "Privacy" });
+
+app.MapControllerRoute(
+    name: "terms",
+    pattern: "home/terms",
+    defaults: new { controller = "Home", action = "Terms" });
+
+app.MapControllerRoute(
+    name: "disclaimer",
+    pattern: "home/disclaimer",
+    defaults: new { controller = "Home", action = "Disclaimer" });
+
+app.MapControllerRoute(
+    name: "articlelist",
+    pattern: "home/list",
+    defaults: new { controller = "Article", action = "List" });
 
 app.MapControllerRoute(
     name: "article",

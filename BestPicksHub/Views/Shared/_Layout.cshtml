@@ -1,0 +1,150 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] ?? "BestPicksHub") - @Configuration["SiteSettings:SiteName"]</title>
+
+    @await Html.PartialAsync("_SeoHead")
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="alternate" type="application/rss+xml" title="@Configuration["SiteSettings:SiteName"] RSS Feed" href="/feed.xml" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    @if (!string.IsNullOrEmpty(Configuration["SiteSettings:GoogleAdsenseId"]))
+    {
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=@Configuration["SiteSettings:GoogleAdsenseId"]" crossorigin="anonymous"></script>
+    }
+
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Organization",
+        "name": "@Configuration["SiteSettings:SiteName"]",
+        "url": "@Configuration["SiteSettings:SiteUrl"]",
+        "description": "@Configuration["SiteSettings:Tagline"]",
+        "logo": "@Configuration["SiteSettings:SiteUrl"]/images/logo.svg"
+    }
+    </script>
+
+    @RenderSection("Head", required: false)
+</head>
+<body>
+    <div class="affiliate-disclosure">
+        <div class="container">
+            <p class="disclosure-text">@Configuration["SiteSettings:DisclaimerText"]</p>
+        </div>
+    </div>
+
+    <header class="site-header">
+        <div class="container">
+            <nav class="site-nav">
+                <a href="/" class="nav-logo">
+                    <svg class="logo-icon" viewBox="0 0 32 32" width="32" height="32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="#2563eb"/>
+                        <path d="M8 16l5 5L24 10" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="logo-text">BestPicksHub</span>
+                </a>
+
+                <button class="mobile-menu-btn" aria-label="Toggle menu" onclick="toggleMobileMenu()">
+                    <span></span><span></span><span></span>
+                </button>
+
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li class="nav-dropdown">
+                        <a href="#" class="nav-link">Categories <svg viewBox="0 0 12 8" width="12" height="8"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                        <div class="dropdown-menu" id="categoryDropdown">
+                            @{
+                                var categories = ViewData["NavCategories"] as List<Category>;
+                            }
+                            @if (categories != null)
+                            {
+                                foreach (var cat in categories)
+                                {
+                                    <a href="/category/@cat.Slug" class="dropdown-item">@cat.Name</a>
+                                }
+                            }
+                        </div>
+                    </li>
+                    <li><a href="/home/list" class="nav-link">Blog</a></li>
+                    <li><a href="/home/about" class="nav-link">About</a></li>
+                    <li><a href="/home/contact" class="nav-link">Contact</a></li>
+                </ul>
+
+                <form class="nav-search" action="/search" method="get">
+                    <div class="search-box">
+                        <input type="text" name="q" class="search-input" placeholder="Search reviews..." aria-label="Search" />
+                        <button type="submit" class="search-btn" aria-label="Search">
+                            <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+                        </button>
+                    </div>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <svg class="logo-icon" viewBox="0 0 32 32" width="32" height="32" fill="none">
+                            <rect width="32" height="32" rx="8" fill="#2563eb"/>
+                            <path d="M8 16l5 5L24 10" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="logo-text">BestPicksHub</span>
+                    </div>
+                    <p class="footer-description">@Configuration["SiteSettings:Tagline"] We help you find the best products with honest, in-depth reviews and comparisons.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/home/list">Blog</a></li>
+                        <li><a href="/home/about">About Us</a></li>
+                        <li><a href="/home/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Categories</h4>
+                    <ul class="footer-links">
+                        @if (categories != null)
+                        {
+                            foreach (var cat in categories)
+                            {
+                                <li><a href="/category/@cat.Slug">@cat.Name</a></li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-heading">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="/home/privacy">Privacy Policy</a></li>
+                        <li><a href="/home/terms">Terms of Use</a></li>
+                        <li><a href="/home/disclaimer">Disclaimer</a></li>
+                        <li><a href="/sitemap.xml">Sitemap</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; @DateTime.UtcNow.Year @Configuration["SiteSettings:SiteName"]. All rights reserved.</p>
+                <p class="footer-affiliate-note">As an affiliate, we earn from qualifying purchases. Product prices and availability are subject to change.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

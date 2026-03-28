@@ -1,0 +1,94 @@
+@model AffiliateProduct
+@{
+    var pros = Model.Pros?.Split('|', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+    var cons = Model.Cons?.Split('|', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+    var platformClass = Model.Platform.ToString().ToLower();
+    var hasDiscount = Model.OriginalPrice.HasValue && Model.OriginalPrice > Model.Price;
+    var discountPercent = hasDiscount ? (int)Math.Round(((Model.OriginalPrice!.Value - Model.Price) / Model.OriginalPrice.Value) * 100) : 0;
+}
+
+<div class="product-card" id="product-@Model.Id">
+    @if (!string.IsNullOrEmpty(Model.Badge))
+    {
+        <span class="product-card-badge">@Model.Badge</span>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="product-card-image">
+            <img src="@Model.ImageUrl" alt="@(Model.ImageAlt ?? Model.Name)" loading="lazy" />
+        </div>
+    }
+
+    <div class="product-card-body">
+        <h3 class="product-card-title">@Model.Name</h3>
+
+        <div class="product-card-rating">
+            <div class="star-rating" data-rating="@Model.Rating">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    if (i <= (int)Model.Rating)
+                    {
+                        <span class="star star-filled">&#9733;</span>
+                    }
+                    else if (i - 0.5m <= Model.Rating)
+                    {
+                        <span class="star star-half">&#9733;</span>
+                    }
+                    else
+                    {
+                        <span class="star star-empty">&#9734;</span>
+                    }
+                }
+            </div>
+            <span class="rating-text">@Model.Rating.ToString("0.0") / 5.0</span>
+        </div>
+
+        <div class="product-card-price">
+            <span class="price-current">@(Model.Price > 1000 ? "₹" : "$")@Model.Price.ToString("N2")</span>
+            @if (hasDiscount)
+            {
+                <span class="price-original">@(Model.OriginalPrice > 1000 ? "₹" : "$")@Model.OriginalPrice!.Value.ToString("N2")</span>
+                <span class="price-discount">@discountPercent% OFF</span>
+            }
+        </div>
+
+        <span class="product-card-platform platform-@platformClass">@Model.Platform</span>
+
+        @if (!string.IsNullOrEmpty(Model.ShortDescription))
+        {
+            <p class="product-card-description">@Model.ShortDescription</p>
+        }
+
+        @if (pros.Length > 0 || cons.Length > 0)
+        {
+            <div class="pros-cons">
+                @if (pros.Length > 0)
+                {
+                    <ul class="pros-list">
+                        @foreach (var pro in pros.Take(3))
+                        {
+                            <li>@pro.Trim()</li>
+                        }
+                    </ul>
+                }
+                @if (cons.Length > 0)
+                {
+                    <ul class="cons-list">
+                        @foreach (var con in cons.Take(2))
+                        {
+                            <li>@con.Trim()</li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
+
+        <div class="product-card-actions">
+            <a href="@Model.AffiliateUrl" class="btn-affiliate" target="_blank" rel="nofollow sponsored" data-platform="@Model.Platform" data-product="@Model.Name">
+                @(Model.Platform == Platform.Amazon || Model.Platform == Platform.Flipkart ? "Check Price" : "Get It Now")
+                <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </a>
+        </div>
+    </div>
+</div>

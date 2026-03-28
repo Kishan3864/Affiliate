@@ -1,0 +1,59 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    ViewData["Title"] = "Affiliate Disclaimer";
+    ViewData["MetaDescription"] = "BestPicksHub Affiliate Disclaimer - Transparency about how we earn through affiliate partnerships and advertising.";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="legal-page">
+            <h1>Affiliate Disclaimer</h1>
+            <p class="legal-date">Last Updated: @DateTime.UtcNow.ToString("MMMM dd, yyyy")</p>
+
+            <div class="disclaimer-highlight">
+                <p><strong>@Configuration["SiteSettings:DisclaimerText"]</strong></p>
+            </div>
+
+            <h2>FTC Disclosure</h2>
+            <p>In accordance with the Federal Trade Commission (FTC) guidelines, we want to be fully transparent about how @Configuration["SiteSettings:SiteName"] generates revenue:</p>
+
+            <h2>Affiliate Partnerships</h2>
+            <p>@Configuration["SiteSettings:SiteName"] is a participant in multiple affiliate programs, including but not limited to:</p>
+            <ul>
+                <li><strong>Amazon Associates Program:</strong> As an Amazon Associate, we earn from qualifying purchases made through our links to Amazon.com and Amazon.in.</li>
+                <li><strong>Flipkart Affiliate Program:</strong> We earn commissions on purchases made through our Flipkart affiliate links.</li>
+                <li><strong>ClickBank:</strong> We promote select digital products through the ClickBank marketplace and earn commissions on sales.</li>
+                <li><strong>Digistore24:</strong> We participate in the Digistore24 affiliate program for digital product recommendations.</li>
+                <li><strong>WarriorPlus:</strong> We promote digital marketing tools and courses through WarriorPlus affiliate links.</li>
+            </ul>
+
+            <h2>How Affiliate Links Work</h2>
+            <p>When you click an affiliate link on our website and make a purchase, the retailer tracks this referral through cookies. If you complete a purchase within the cookie duration period, we receive a small commission. This comes from the retailer's marketing budget and does <strong>not</strong> increase the price you pay.</p>
+
+            <h2>Google AdSense</h2>
+            <p>We also use Google AdSense to display advertisements on our website. Google may use cookies to serve ads based on your browsing history. You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a>.</p>
+
+            <h2>Our Editorial Policy</h2>
+            <p>Our affiliate relationships <strong>never</strong> influence our product reviews or recommendations. Our editorial process is independent:</p>
+            <ul>
+                <li>We research products thoroughly before recommending them</li>
+                <li>We include both pros and cons in every review</li>
+                <li>We recommend products we genuinely believe provide value</li>
+                <li>Negative reviews are published when products don't meet our standards</li>
+                <li>We clearly mark affiliate links throughout our content</li>
+            </ul>
+
+            <h2>Product Information Accuracy</h2>
+            <p>While we strive to keep product information accurate and up-to-date:</p>
+            <ul>
+                <li>Prices may change without notice on retailer websites</li>
+                <li>Product availability varies by region and time</li>
+                <li>Features and specifications may be updated by manufacturers</li>
+                <li>Always verify details on the retailer's website before purchasing</li>
+            </ul>
+
+            <h2>Questions?</h2>
+            <p>If you have any questions about our affiliate relationships or how we generate revenue, please don't hesitate to <a href="/home/contact">contact us</a>. We believe in full transparency with our readers.</p>
+        </div>
+    </div>
+</section>

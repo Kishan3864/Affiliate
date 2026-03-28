@@ -1,0 +1,148 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Best Product Reviews & Buying Guides";
+    ViewData["MetaDescription"] = "BestPicksHub helps you find the best products with honest, in-depth reviews, comparisons, and buying guides. Smart choices, honest reviews.";
+}
+
+<section class="hero">
+    <div class="container">
+        <h1 class="hero-title">Smart Choices. Honest Reviews.</h1>
+        <p class="hero-subtitle">Find the best products with expert reviews, detailed comparisons, and buying guides you can trust.</p>
+        <form class="hero-search" action="/search" method="get">
+            <div class="search-box search-box-lg">
+                <input type="text" name="q" class="search-input" placeholder="Search for products, reviews, guides..." aria-label="Search" />
+                <button type="submit" class="search-btn">
+                    <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+@if (Model.FeaturedArticles.Any())
+{
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Featured Reviews</h2>
+            <div class="article-grid">
+                @foreach (var article in Model.FeaturedArticles)
+                {
+                    <a href="/@article.Slug" class="article-card">
+                        <div class="article-card-image">
+                            @if (!string.IsNullOrEmpty(article.FeaturedImageUrl))
+                            {
+                                <img src="@article.FeaturedImageUrl" alt="@(article.FeaturedImageAlt ?? article.Title)" loading="lazy" />
+                            }
+                            <span class="badge badge-@article.Type.ToString().ToLower()">@article.Type</span>
+                        </div>
+                        <div class="article-card-content">
+                            <div class="article-card-meta">
+                                <span class="meta-category">@article.Category?.Name</span>
+                                <span class="meta-date">@article.CreatedAt.ToString("MMM dd, yyyy")</span>
+                            </div>
+                            <h3 class="article-card-title-text">@article.Title</h3>
+                            <p class="article-card-excerpt">@article.Excerpt</p>
+                            <div class="article-card-footer">
+                                <span class="meta-readtime">@article.ReadTimeMinutes min read</span>
+                                @if (article.OverallRating > 0)
+                                {
+                                    <span class="meta-rating">&#9733; @article.OverallRating.ToString("0.0")</span>
+                                }
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<div class="ad-container ad-header">
+    <span class="ad-label">Advertisement</span>
+    <div class="ad-placeholder" data-ad-slot="home-banner">
+        <p>Ad Space (728x90)</p>
+    </div>
+</div>
+
+@if (Model.Categories.Any())
+{
+    <section class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">Browse by Category</h2>
+            <div class="category-grid">
+                @foreach (var cat in Model.Categories.Where(c => c.IsActive))
+                {
+                    <a href="/category/@cat.Slug" class="category-card">
+                        <div class="category-icon">
+                            @if (!string.IsNullOrEmpty(cat.IconSvg))
+                            {
+                                @Html.Raw(cat.IconSvg)
+                            }
+                        </div>
+                        <h3 class="category-name">@cat.Name</h3>
+                        <p class="category-count-text">@cat.Articles.Count(a => a.IsPublished) articles</p>
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@if (Model.TopPicks.Any())
+{
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Top Picks</h2>
+            <div class="product-grid">
+                @foreach (var product in Model.TopPicks)
+                {
+                    await Html.RenderPartialAsync("_ProductCard", product);
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@if (Model.LatestArticles.Any())
+{
+    <section class="section section-gray">
+        <div class="container">
+            <h2 class="section-title">Latest Articles</h2>
+            <div class="article-grid">
+                @foreach (var article in Model.LatestArticles)
+                {
+                    <a href="/@article.Slug" class="article-card">
+                        <div class="article-card-image">
+                            @if (!string.IsNullOrEmpty(article.FeaturedImageUrl))
+                            {
+                                <img src="@article.FeaturedImageUrl" alt="@(article.FeaturedImageAlt ?? article.Title)" loading="lazy" />
+                            }
+                            <span class="badge badge-@article.Type.ToString().ToLower()">@article.Type</span>
+                        </div>
+                        <div class="article-card-content">
+                            <div class="article-card-meta">
+                                <span class="meta-category">@article.Category?.Name</span>
+                                <span class="meta-date">@article.CreatedAt.ToString("MMM dd, yyyy")</span>
+                            </div>
+                            <h3 class="article-card-title-text">@article.Title</h3>
+                            <p class="article-card-excerpt">@article.Excerpt</p>
+                            <div class="article-card-footer">
+                                <span class="meta-readtime">@article.ReadTimeMinutes min read</span>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+            <div class="text-center mt-2">
+                <a href="/home/list" class="btn btn-outline">View All Articles</a>
+            </div>
+        </div>
+    </section>
+}
+
+<div class="ad-container ad-footer">
+    <span class="ad-label">Advertisement</span>
+    <div class="ad-placeholder" data-ad-slot="home-footer">
+        <p>Ad Space (728x90)</p>
+    </div>
+</div>
