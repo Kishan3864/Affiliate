@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Error";
+    var statusCode = ViewData["StatusCode"]?.ToString() ?? "500";
+}
+
+<section class="section">
+    <div class="container text-center">
+        <h1 style="font-size:5rem;color:#2563eb;margin-bottom:0.5rem;">@statusCode</h1>
+        @if (statusCode == "404")
+        {
+            <h2>Page Not Found</h2>
+            <p class="text-muted">The page you're looking for doesn't exist or has been moved.</p>
+        }
+        else
+        {
+            <h2>Something Went Wrong</h2>
+            <p class="text-muted">We're sorry, an unexpected error occurred. Please try again later.</p>
+        }
+        <a href="/" class="btn btn-primary mt-2">Back to Home</a>
+    </div>
+</section>

@@ -1,0 +1,32 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    var title = ViewData["Title"]?.ToString() ?? Configuration["SiteSettings:SiteName"];
+    var description = ViewData["MetaDescription"]?.ToString() ?? Configuration["SiteSettings:Tagline"];
+    var keywords = ViewData["Keywords"]?.ToString() ?? "best products, reviews, buying guide, affiliate, deals";
+    var ogImage = ViewData["OgImage"]?.ToString() ?? $"{Configuration["SiteSettings:SiteUrl"]}/images/logo.svg";
+    var ogType = ViewData["OgType"]?.ToString() ?? "website";
+    var canonicalUrl = ViewData["CanonicalUrl"]?.ToString() ?? $"{Configuration["SiteSettings:SiteUrl"]}{Context.Request.Path}";
+}
+
+<meta name="description" content="@description" />
+<meta name="keywords" content="@keywords" />
+<meta name="author" content="@Configuration["SiteSettings:Author"]" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="@canonicalUrl" />
+
+<meta property="og:title" content="@title" />
+<meta property="og:description" content="@description" />
+<meta property="og:type" content="@ogType" />
+<meta property="og:url" content="@canonicalUrl" />
+<meta property="og:image" content="@ogImage" />
+<meta property="og:site_name" content="@Configuration["SiteSettings:SiteName"]" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="@title" />
+<meta name="twitter:description" content="@description" />
+<meta name="twitter:image" content="@ogImage" />
+
+@if (ViewData["JsonLd"] != null)
+{
+    <script type="application/ld+json">@Html.Raw(ViewData["JsonLd"])</script>
+}

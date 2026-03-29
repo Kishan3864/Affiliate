@@ -1,0 +1,129 @@
+@model Article
+@{
+    ViewData["Title"] = Model?.Id > 0 ? "Edit Article" : "New Article";
+    Layout = "_Layout";
+    var categories = ViewBag.Categories as List<Category> ?? new List<Category>();
+}
+
+<section class="section">
+    <div class="container">
+        <div class="admin-layout">
+            <nav class="admin-sidebar">
+                <h3 class="admin-sidebar-title">Admin Panel</h3>
+                <ul class="admin-nav">
+                    <li><a href="/admin" class="admin-nav-link">Dashboard</a></li>
+                    <li><a href="/admin/articles" class="admin-nav-link active">Articles</a></li>
+                    <li><a href="/admin/products" class="admin-nav-link">Products</a></li>
+                    <li><a href="/" class="admin-nav-link">View Site</a></li>
+                </ul>
+            </nav>
+            <div class="admin-content">
+                <h1>@ViewData["Title"]</h1>
+                <form method="post" action="/admin/editarticle" class="admin-form">
+                    <input type="hidden" name="Id" value="@(Model?.Id ?? 0)" />
+
+                    <div class="form-row">
+                        <div class="form-group form-group-wide">
+                            <label for="Title">Title</label>
+                            <input type="text" id="Title" name="Title" class="form-input" value="@Model?.Title" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="Slug">Slug</label>
+                            <input type="text" id="Slug" name="Slug" class="form-input" value="@Model?.Slug" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="CategoryId">Category</label>
+                            <select id="CategoryId" name="CategoryId" class="form-input">
+                                @foreach (var cat in categories)
+                                {
+                                    <option value="@cat.Id" selected="@(Model?.CategoryId == cat.Id)">@cat.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="Type">Article Type</label>
+                            <select id="Type" name="Type" class="form-input">
+                                @foreach (ArticleType type in Enum.GetValues(typeof(ArticleType)))
+                                {
+                                    <option value="@type" selected="@(Model?.Type == type)">@type</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Author">Author</label>
+                            <input type="text" id="Author" name="Author" class="form-input" value="@(Model?.Author ?? "BestPicksHub Editorial Team")" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="MetaDescription">Meta Description (max 160 chars)</label>
+                        <textarea id="MetaDescription" name="MetaDescription" class="form-input" rows="2" maxlength="160">@Model?.MetaDescription</textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="FocusKeyword">Focus Keyword</label>
+                            <input type="text" id="FocusKeyword" name="FocusKeyword" class="form-input" value="@Model?.FocusKeyword" />
+                        </div>
+                        <div class="form-group">
+                            <label for="Keywords">Keywords (comma-separated)</label>
+                            <input type="text" id="Keywords" name="Keywords" class="form-input" value="@Model?.Keywords" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Excerpt">Excerpt</label>
+                        <textarea id="Excerpt" name="Excerpt" class="form-input" rows="3">@Model?.Excerpt</textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="FeaturedImageUrl">Featured Image URL</label>
+                            <input type="text" id="FeaturedImageUrl" name="FeaturedImageUrl" class="form-input" value="@Model?.FeaturedImageUrl" />
+                        </div>
+                        <div class="form-group">
+                            <label for="FeaturedImageAlt">Image Alt Text</label>
+                            <input type="text" id="FeaturedImageAlt" name="FeaturedImageAlt" class="form-input" value="@Model?.FeaturedImageAlt" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ContentHtml">Content (HTML)</label>
+                        <textarea id="ContentHtml" name="ContentHtml" class="form-input form-textarea-lg" rows="20">@Model?.ContentHtml</textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="OverallRating">Rating (0-5)</label>
+                            <input type="number" id="OverallRating" name="OverallRating" class="form-input" value="@Model?.OverallRating" step="0.1" min="0" max="5" />
+                        </div>
+                        <div class="form-group">
+                            <label for="ReadTimeMinutes">Read Time (minutes)</label>
+                            <input type="number" id="ReadTimeMinutes" name="ReadTimeMinutes" class="form-input" value="@Model?.ReadTimeMinutes" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group form-checkbox">
+                            <label><input type="checkbox" name="IsPublished" value="true" @(Model?.IsPublished == true ? "checked" : "") /> Published</label>
+                        </div>
+                        <div class="form-group form-checkbox">
+                            <label><input type="checkbox" name="IsFeatured" value="true" @(Model?.IsFeatured == true ? "checked" : "") /> Featured</label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Article</button>
+                        <a href="/admin/articles" class="btn btn-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  bestpickshub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - bestpickshub-data:/app/data
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/bestpickshub.db
+    restart: unless-stopped
+
+volumes:
+  bestpickshub-data:

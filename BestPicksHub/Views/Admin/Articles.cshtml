@@ -1,0 +1,69 @@
+@model List<Article>
+@{
+    ViewData["Title"] = "Manage Articles";
+    Layout = "_Layout";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="admin-layout">
+            <nav class="admin-sidebar">
+                <h3 class="admin-sidebar-title">Admin Panel</h3>
+                <ul class="admin-nav">
+                    <li><a href="/admin" class="admin-nav-link">Dashboard</a></li>
+                    <li><a href="/admin/articles" class="admin-nav-link active">Articles</a></li>
+                    <li><a href="/admin/products" class="admin-nav-link">Products</a></li>
+                    <li><a href="/" class="admin-nav-link">View Site</a></li>
+                </ul>
+            </nav>
+            <div class="admin-content">
+                <div class="admin-header-row">
+                    <h1>Articles</h1>
+                    <a href="/admin/editarticle" class="btn btn-primary">+ New Article</a>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Views</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var article in Model)
+                        {
+                            <tr>
+                                <td><a href="/@article.Slug">@article.Title</a></td>
+                                <td>@article.Category?.Name</td>
+                                <td><span class="badge badge-@article.Type.ToString().ToLower()">@article.Type</span></td>
+                                <td>
+                                    @if (article.IsPublished)
+                                    {
+                                        <span class="status-published">Published</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-draft">Draft</span>
+                                    }
+                                </td>
+                                <td>@article.ViewCount</td>
+                                <td>@article.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <a href="/admin/editarticle/@article.Id" class="btn btn-sm btn-outline">Edit</a>
+                                    <form method="post" action="/admin/deletearticle/@article.Id" style="display:inline" onsubmit="return confirm('Delete this article?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

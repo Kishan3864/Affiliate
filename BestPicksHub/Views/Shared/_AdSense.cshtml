@@ -1,0 +1,20 @@
+@{
+    var slotType = ViewData["AdSlot"]?.ToString() ?? "in-article";
+    var adClass = slotType switch
+    {
+        "header" => "ad-header",
+        "sidebar" => "ad-sidebar",
+        "footer" => "ad-footer",
+        _ => "ad-in-article"
+    };
+}
+
+<div class="ad-container @adClass">
+    <span class="ad-label">Advertisement</span>
+    <div class="ad-placeholder" data-ad-slot="@slotType">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+</div>
